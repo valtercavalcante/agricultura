@@ -279,7 +279,7 @@ class Sist extends CI_Controller {
 			$stringdedata = "d/m/Y";
 			$inscricao->data = date($stringdedata, strtotime($inscricao->data));
 			
-			$data['inscricoes']= "<tr><td>".$inscricao->nomeparticipante."</td><td>".$inscricao->nome."</td><td align=\"center\">".$inscricao->data."</td><td align=\"center\">".substr($inscricao->hora_inicio, 0,5)
+			$data['inscricoes']= "<tr class=\"gradeA\"><td>".$inscricao->nomeparticipante."</td><td>".$inscricao->nome."</td><td align=\"center\">".$inscricao->data."</td><td align=\"center\">".substr($inscricao->hora_inicio, 0,5)
 			."</td><td align=\"center\">".substr($inscricao->hora_final, 0,5)."</td><td align=\"center\">".anchor('sist/deleta_inscricao_relatorio/'.$inscricao->id_inscricao, 'Deletar Inscrição', array('class' => 'btn btn-danger btn-xs','onclick'=>"return excluir()"))."</td></tr>".$data['inscricoes'];
 		}
 		//seleciona todos os participantes cadastrados

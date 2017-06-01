@@ -14,7 +14,7 @@
 							<div class="panel panel-default">
 	  							<div class="panel-heading"><strong>PARTICIPANTES CADASTRADOS</strong></h4></div>
 	  							<div class="panel-body">
-	  								<table class="table table-striped table-bordered" id="tabela1" class="tablesorter">
+	  								 <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
 										<thead>
 											<tr><th>NOME DO PARTICIPANTE</th><th>CPF</th><th style="text-align: center">E-MAIL</th><th style="text-align: center">TELEFONE</th><th style="text-align: center">OCUPAÇÃO</th><th style="text-align: center">AÇÕES</th></tr>
 										</thead>
