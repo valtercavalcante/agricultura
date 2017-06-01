@@ -162,6 +162,80 @@ class Sist extends CI_Controller {
 	}
 	public function minhas_inscricoes() {
 		$this->load->helper('date');
+		$this->db->select('*');
+		$this->db->from('atividade');
+		$this->db->where('tipo','2');
+		$this->db->order_by('data desc , hora_inicio desc');
+		$minicursos = $this->db->get()->result();
+		$data['minicursos'] = "";
+		foreach ($minicursos as $minicurso){
+			$this->db->select('*');
+			$this->db->from('inscricoes');
+			$this->db->where('id_atividade',$minicurso->id);
+			$numinscritos = $this->db->get()->num_rows();
+				if ($numinscritos>$minicurso->vagas || $numinscritos==$minicurso->vagas){
+					$botao = '<button type="button" class="btn btn-danger btn-sm" disabled="disabled">Inscrições Encerradas</button>';
+				}
+				else{
+					$botao = '<button type="button" class="btn btn-danger btn-sm" disabled="disabled">Inscrições Encerradas</button>';
+					//$botao = anchor('sist/realiza_inscricao/'.$minicurso->id, 'Realizar Inscrição', array('class' => 'btn btn-primary btn-sm'));
+				}
+			$stringdedata = "d/m/Y";
+			$minicurso->data = date($stringdedata, strtotime($minicurso->data));
+			$data['minicursos']= "<tr><td>".$minicurso->nome."</td><td>".$minicurso->palestrante."</td><td align=\"center\">".$minicurso->data."</td><td align=\"center\">".substr($minicurso->hora_inicio, 0,5)
+			."</td><td align=\"center\">".substr($minicurso->hora_final, 0,5)."</td><td>".$botao."</td></tr>".$data['minicursos'];
+		}
+		$this->db->select('*');
+		$this->db->from('atividade');
+		$this->db->where('tipo','1');
+		$this->db->order_by('data desc , hora_inicio desc');
+		$palestras = $this->db->get()->result();
+		$data['palestras'] = "";
+		foreach ($palestras as $palestra){
+			$this->db->select('*');
+			$this->db->from('inscricoes');
+			$this->db->where('id_atividade',$palestra->id);
+			$numinscritos = $this->db->get()->num_rows();
+				if ($numinscritos>$palestra->vagas || $numinscritos==$palestra->vagas){
+					//$botao = anchor('sist/form_inscricao', 'Vagas Esgotadas', array('class' => 'btn btn-danger btn-sm','disabled'=>'disabled'));
+					$botao = '<button type="button" class="btn btn-danger btn-sm" disabled="disabled">Inscrições Encerradas</button>';
+				}
+				else{
+					$botao = '<button type="button" class="btn btn-danger btn-sm" disabled="disabled">Inscrições Encerradas</button>';
+					//$botao = anchor('sist/realiza_inscricao/'.$palestra->id, 'Realizar Inscrição', array('class' => 'btn btn-primary btn-sm'));
+				}
+			$stringdedata = "d/m/Y";
+			$palestra->data = date($stringdedata, strtotime($palestra->data));
+			//$dtcurso = date($stringdedata, $minicurso->data);
+			$data['palestras']= "<tr><td>".$palestra->nome."</td><td>".$palestra->palestrante."</td><td align=\"center\">".$palestra->data."</td><td align=\"center\">".substr($palestra->hora_inicio, 0,5).
+			"</td><td align=\"center\">".substr($palestra->hora_final, 0,5)."</td><td>".$botao."</td></tr>".$data['palestras'];		
+		}
+		$this->db->select('*');
+		$this->db->from('atividade');
+		$this->db->where('tipo','3');
+		$this->db->order_by('data desc , hora_inicio desc');
+		$oficinas = $this->db->get()->result();
+		$data['oficinas'] = "";
+		foreach ($oficinas as $oficina){
+			$this->db->select('*');
+			$this->db->from('inscricoes');
+			$this->db->where('id_atividade',$oficina->id);
+			$numinscritos = $this->db->get()->num_rows();
+				if ($numinscritos>$oficina->vagas || $numinscritos==$oficina->vagas){
+					$botao = '<button type="button" class="btn btn-danger btn-sm" disabled="disabled">Inscrições Encerradas</button>';
+				}
+				else{
+					$botao = '<button type="button" class="btn btn-danger btn-sm" disabled="disabled">Inscrições Encerradas</button>';
+					//$botao = anchor('sist/realiza_inscricao/'.$oficina->id, 'Realizar Inscrição', array('class' => 'btn btn-primary btn-sm'));
+				}
+			$stringdedata = "d/m/Y";
+			$oficina->data = date($stringdedata, strtotime($oficina->data));
+			//$dtcurso = date($stringdedata, $minicurso->data);
+			$data['oficinas']= "<tr><td>".$oficina->nome."</td><td>".$oficina->palestrante."</td><td align=\"center\">".$oficina->data."</td><td align=\"center\">".substr($oficina->hora_inicio, 0,5).
+			"</td><td align=\"center\">".substr($oficina->hora_final, 0,5)."</td><td>".$botao."</td></tr>".$data['oficinas'];		
+		}
+		
+		
 		$data['inscricoes'] ="";
 		/*$this->db->select('id');
 		$this->db->from('inscricoes');

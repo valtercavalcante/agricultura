@@ -29,7 +29,7 @@ jQuery(function($){
 		
 				
 					<div class="col-md-12">
-						 <h1 class="page-header">Cadastros</h1>
+						 <h2 class="page-header">Cadastros</h2>
 						<div class="col-md-6">
 							<div class="panel panel-default">
 	  							<div class="panel-heading"><strong>CADASTRO DE ATIVIDADE</strong></h4></div>

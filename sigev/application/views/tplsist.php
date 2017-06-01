@@ -127,10 +127,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                        			-->
                        	<li><a href="<?php  echo base_url()?>sist/home_sist"><i class="glyphicon glyphicon-home"></i> Início</a></li>
                      <!--<li><a href="<?php  echo base_url()?>sist/form_inscricao"><i class="glyphicon glyphicon-plus-sign"></i> Inscrições</a></li>-->
-                    <li><a href="<?php  echo base_url()?>sist/minhas_inscricoes"><i class="glyphicon glyphicon-stats"></i> Minhas inscrições / Certificados</a></li>
+                    <li><a href="<?php  echo base_url()?>sist/minhas_inscricoes"><i class="glyphicon glyphicon-plus-sign"></i> Inscrições</a></li>
+                    
                     <?php
                     	if ($this->session->userdata('status')==1){
-                    		echo "<li><a href=".base_url()."sist/form_inscricao><i class=\"glyphicon glyphicon-plus-sign\"></i> Inscrições</a></li>";
                     		echo "<li><a href=".base_url()."sist/relatorio_inscricoes><i class=\"glyphicon glyphicon-list\"></i> Relatório de Inscrições Realizadas</a></li>";
 							echo "<li><a href=".base_url()."sist/relatorio_participantes><i class=\"glyphicon glyphicon-list\"></i> Relatório de Participantes inscritos</a></li>";
 							echo "<li><a href=".base_url()."sist/cadastros><i class=\"glyphicon glyphicon-list\"></i> Cadastros</a></li>";
