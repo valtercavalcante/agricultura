@@ -193,6 +193,10 @@ section.success {
   background: white;
 
 }
+section.programacao {
+  background: #FFFBD6;
+
+}
 @media (max-width: 767px) {
   section {
     padding: 75px 0;
@@ -335,6 +339,22 @@ footer .footer-below {
 .btn-outline.active {
   color: #18BC9C;
   background: white;
+  border: solid 2px white;
+}
+.btn-programacao {
+  color: #416C40;
+  font-size: 20px;
+  border: solid 2px #416C40;
+  background: transparent;
+  transition: all 0.3s ease-in-out;
+  margin-top: 15px;
+}
+.btn-programacao:hover,
+.btn-outline:focus,
+.btn-outline:active,
+.btn-outline.active {
+  color: white;
+  background: #416C40;
   border: solid 2px white;
 }
 .btn-primary {
