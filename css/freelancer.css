@@ -197,6 +197,10 @@ section.programacao {
   background: #FFFBD6;
 
 }
+section.concursos {
+  background: #D2E28B;
+
+}
 @media (max-width: 767px) {
   section {
     padding: 75px 0;
