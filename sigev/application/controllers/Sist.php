@@ -29,11 +29,11 @@ class Sist extends CI_Controller {
 			$this->db->where('id_atividade',$minicurso->id);
 			$numinscritos = $this->db->get()->num_rows();
 				if ($numinscritos>$minicurso->vagas || $numinscritos==$minicurso->vagas){
-					$botao = '<button type="button" class="btn btn-danger btn-sm" disabled="disabled">Inscrições Encerradas</button>';
+					$botao = anchor('sist/form_inscricao', 'Vagas Esgotadas', array('class' => 'btn btn-danger btn-sm','disabled'=>'disabled'));
 				}
 				else{
-					$botao = '<button type="button" class="btn btn-danger btn-sm" disabled="disabled">Inscrições Encerradas</button>';
-					//$botao = anchor('sist/realiza_inscricao/'.$minicurso->id, 'Realizar Inscrição', array('class' => 'btn btn-primary btn-sm'));
+					//$botao = '<button type="button" class="btn btn-danger btn-sm" disabled="disabled">Inscrições Encerradas</button>';
+					$botao = anchor('sist/realiza_inscricao/'.$minicurso->id, 'Realizar Inscrição', array('class' => 'btn btn-primary btn-sm'));
 				}
 			$stringdedata = "d/m/Y";
 			$minicurso->data = date($stringdedata, strtotime($minicurso->data));
@@ -52,12 +52,12 @@ class Sist extends CI_Controller {
 			$this->db->where('id_atividade',$palestra->id);
 			$numinscritos = $this->db->get()->num_rows();
 				if ($numinscritos>$palestra->vagas || $numinscritos==$palestra->vagas){
-					//$botao = anchor('sist/form_inscricao', 'Vagas Esgotadas', array('class' => 'btn btn-danger btn-sm','disabled'=>'disabled'));
-					$botao = '<button type="button" class="btn btn-danger btn-sm" disabled="disabled">Inscrições Encerradas</button>';
+					$botao = anchor('sist/form_inscricao', 'Vagas Esgotadas', array('class' => 'btn btn-danger btn-sm','disabled'=>'disabled'));
+					//$botao = '<button type="button" class="btn btn-danger btn-sm" disabled="disabled">Inscrições Encerradas</button>';
 				}
 				else{
-					$botao = '<button type="button" class="btn btn-danger btn-sm" disabled="disabled">Inscrições Encerradas</button>';
-					//$botao = anchor('sist/realiza_inscricao/'.$palestra->id, 'Realizar Inscrição', array('class' => 'btn btn-primary btn-sm'));
+					//$botao = '<button type="button" class="btn btn-danger btn-sm" disabled="disabled">Inscrições Encerradas</button>';
+					$botao = anchor('sist/realiza_inscricao/'.$palestra->id, 'Realizar Inscrição', array('class' => 'btn btn-primary btn-sm'));
 				}
 			$stringdedata = "d/m/Y";
 			$palestra->data = date($stringdedata, strtotime($palestra->data));
@@ -77,11 +77,11 @@ class Sist extends CI_Controller {
 			$this->db->where('id_atividade',$oficina->id);
 			$numinscritos = $this->db->get()->num_rows();
 				if ($numinscritos>$oficina->vagas || $numinscritos==$oficina->vagas){
-					$botao = '<button type="button" class="btn btn-danger btn-sm" disabled="disabled">Inscrições Encerradas</button>';
+					$botao = anchor('sist/form_inscricao', 'Vagas Esgotadas', array('class' => 'btn btn-danger btn-sm','disabled'=>'disabled'));
 				}
 				else{
-					$botao = '<button type="button" class="btn btn-danger btn-sm" disabled="disabled">Inscrições Encerradas</button>';
-					//$botao = anchor('sist/realiza_inscricao/'.$oficina->id, 'Realizar Inscrição', array('class' => 'btn btn-primary btn-sm'));
+					//$botao = '<button type="button" class="btn btn-danger btn-sm" disabled="disabled">Inscrições Encerradas</button>';
+					$botao = anchor('sist/realiza_inscricao/'.$oficina->id, 'Realizar Inscrição', array('class' => 'btn btn-primary btn-sm'));
 				}
 			$stringdedata = "d/m/Y";
 			$oficina->data = date($stringdedata, strtotime($oficina->data));
@@ -106,7 +106,7 @@ class Sist extends CI_Controller {
 		//verifica se ele já está incrito em alguma atividade
 		if($inscricoes_do_participante->num_rows() == 0){ //se não possuir insere sua primeira atividade 
 			$this->db->insert('inscricoes',array('id_atividade'=>$id_atividade,'id_participante' => $this->session->userdata('id')));
-			echo '<script type="text/javascript">alert("Inscrição Realizada com sucesso!");window.location.href=\''.base_url().'sist/form_inscricao\';
+			echo '<script type="text/javascript">alert("Inscrição Realizada com sucesso!");window.location.href=\''.base_url().'sist/minhas_inscricoes\';
     		</script>';
 			//echo  "<script>alert('Inscrição Realizada com sucesso!');</script>";
 			//redirect('/sist/form_inscricao/', 'refresh');
@@ -119,15 +119,24 @@ class Sist extends CI_Controller {
 			$this->db->where('id_participante',$this->session->userdata('id'));
 			$inscricoes = $this->db->get();
 			if($inscricoes->num_rows() !=0){ //verifica se já está inscrito no curso pretendido
-			echo '<script type="text/javascript">alert("Você já está inscrito neste curso!");window.location.href=\''.base_url().'sist/form_inscricao/\';
+			echo '<script type="text/javascript">alert("Você já está inscrito neste curso!");window.location.href=\''.base_url().'sist/minhas_inscricoes/\';
     		</script>';
 				//echo  "<script>alert('Você já está inscrito neste curso!');</script>";
 				//redirect('/sist/form_inscricao/', 'refresh');
 				//die();	
 			}
 			else{ //se não estiver inscrito no curso pretendido
-				$verfifica_horario = TRUE;
-				foreach ($inscricoes_do_participante -> result() as $inscricao){ //verifica se a data e horário do curso pretendido estão batendo com algum dos cursos já inscritos
+				$this->db->select('inscricoes.id');
+				$this->db->from('inscricoes');
+				$this->db->join('participante', 'inscricoes.id_participante = participante.id');
+				$this->db->where('participante.ocupacao',$this->session->userdata('ocupacao'));
+				$inscritos_ocupacao = $this->db->get();
+				if($inscritos_ocupacao->num_rows() >= 10){
+					echo '<script type="text/javascript">alert("O numero de incritos para já chegou ao limite!");window.location.href=\''.base_url().'sist/minhas_inscricoes/\';
+    				</script>';
+				}else	
+					$verfifica_horario = TRUE;
+					foreach ($inscricoes_do_participante -> result() as $inscricao){ //verifica se a data e horário do curso pretendido estão batendo com algum dos cursos já inscritos
 					$this->db->select('*');
 					$this->db->from('atividade');
 					$this->db->where('id',$inscricao->id_atividade);
@@ -145,13 +154,13 @@ class Sist extends CI_Controller {
 				}
 				if($verfifica_horario){
 					$this->db->insert('inscricoes',array('id_atividade'=>$id_atividade,'id_participante' => $this->session->userdata('id')));
-					echo '<script type="text/javascript">alert("Inscrição Realizada com sucesso!");window.location.href=\''.base_url().'sist/form_inscricao/\';
+					echo '<script type="text/javascript">alert("Inscrição Realizada com sucesso!");window.location.href=\''.base_url().'sist/minhas_inscricoes/\';
     				</script>';
 					//echo  "<script>alert('Inscrição Realizada com sucesso!');</script>";
 					//redirect('/sist/form_inscricao/', 'refresh');	
 				}
 				else{
-					echo '<script type="text/javascript">alert("Você já está inscrito num curso com data e horários conscidentes com este!");window.location.href=\''.base_url().'sist/form_inscricao/\';
+					echo '<script type="text/javascript">alert("Você já está inscrito num curso com data e horários conscidentes com este!");window.location.href=\''.base_url().'sist/minhas_inscricoes/\';
     				</script>';
 					//echo  "<script>alert('Você já está inscrito num curso com data e horários conscidentes com este!');</script>";
 					//redirect('/sist/form_inscricao/', 'refresh');
@@ -165,7 +174,7 @@ class Sist extends CI_Controller {
 		$this->db->select('*');
 		$this->db->from('atividade');
 		$this->db->where('tipo','2');
-		$this->db->order_by('data desc , hora_inicio desc');
+		$this->db->order_by('data desc , hora_inicio desc, nome desc');
 		$minicursos = $this->db->get()->result();
 		$data['minicursos'] = "";
 		foreach ($minicursos as $minicurso){
@@ -174,11 +183,11 @@ class Sist extends CI_Controller {
 			$this->db->where('id_atividade',$minicurso->id);
 			$numinscritos = $this->db->get()->num_rows();
 				if ($numinscritos>$minicurso->vagas || $numinscritos==$minicurso->vagas){
-					$botao = '<button type="button" class="btn btn-danger btn-sm" disabled="disabled">Inscrições Encerradas</button>';
+					$botao = anchor('sist/form_inscricao', 'Vagas Esgotadas', array('class' => 'btn btn-danger btn-sm','disabled'=>'disabled'));
 				}
 				else{
-					$botao = '<button type="button" class="btn btn-danger btn-sm" disabled="disabled">Inscrições Encerradas</button>';
-					//$botao = anchor('sist/realiza_inscricao/'.$minicurso->id, 'Realizar Inscrição', array('class' => 'btn btn-primary btn-sm'));
+					//$botao = '<button type="button" class="btn btn-danger btn-sm" disabled="disabled">Inscrições Encerradas</button>';
+					$botao = anchor('sist/realiza_inscricao/'.$minicurso->id, 'Realizar Inscrição', array('class' => 'btn btn-primary btn-sm'));
 				}
 			$stringdedata = "d/m/Y";
 			$minicurso->data = date($stringdedata, strtotime($minicurso->data));
@@ -188,7 +197,7 @@ class Sist extends CI_Controller {
 		$this->db->select('*');
 		$this->db->from('atividade');
 		$this->db->where('tipo','1');
-		$this->db->order_by('data desc , hora_inicio desc');
+		$this->db->order_by('data desc , hora_inicio desc, nome desc');
 		$palestras = $this->db->get()->result();
 		$data['palestras'] = "";
 		foreach ($palestras as $palestra){
@@ -197,12 +206,12 @@ class Sist extends CI_Controller {
 			$this->db->where('id_atividade',$palestra->id);
 			$numinscritos = $this->db->get()->num_rows();
 				if ($numinscritos>$palestra->vagas || $numinscritos==$palestra->vagas){
-					//$botao = anchor('sist/form_inscricao', 'Vagas Esgotadas', array('class' => 'btn btn-danger btn-sm','disabled'=>'disabled'));
-					$botao = '<button type="button" class="btn btn-danger btn-sm" disabled="disabled">Inscrições Encerradas</button>';
+					$botao = anchor('sist/form_inscricao', 'Vagas Esgotadas', array('class' => 'btn btn-danger btn-sm','disabled'=>'disabled'));
+					//$botao = '<button type="button" class="btn btn-danger btn-sm" disabled="disabled">Inscrições Encerradas</button>';
 				}
 				else{
-					$botao = '<button type="button" class="btn btn-danger btn-sm" disabled="disabled">Inscrições Encerradas</button>';
-					//$botao = anchor('sist/realiza_inscricao/'.$palestra->id, 'Realizar Inscrição', array('class' => 'btn btn-primary btn-sm'));
+					//$botao = '<button type="button" class="btn btn-danger btn-sm" disabled="disabled">Inscrições Encerradas</button>';
+					$botao = anchor('sist/realiza_inscricao/'.$palestra->id, 'Realizar Inscrição', array('class' => 'btn btn-primary btn-sm'));
 				}
 			$stringdedata = "d/m/Y";
 			$palestra->data = date($stringdedata, strtotime($palestra->data));
@@ -213,7 +222,7 @@ class Sist extends CI_Controller {
 		$this->db->select('*');
 		$this->db->from('atividade');
 		$this->db->where('tipo','3');
-		$this->db->order_by('data desc , hora_inicio desc');
+		$this->db->order_by('data desc , hora_inicio desc, nome desc');
 		$oficinas = $this->db->get()->result();
 		$data['oficinas'] = "";
 		foreach ($oficinas as $oficina){
@@ -222,11 +231,11 @@ class Sist extends CI_Controller {
 			$this->db->where('id_atividade',$oficina->id);
 			$numinscritos = $this->db->get()->num_rows();
 				if ($numinscritos>$oficina->vagas || $numinscritos==$oficina->vagas){
-					$botao = '<button type="button" class="btn btn-danger btn-sm" disabled="disabled">Inscrições Encerradas</button>';
+					$botao = anchor('sist/form_inscricao', 'Vagas Esgotadas', array('class' => 'btn btn-danger btn-sm','disabled'=>'disabled'));
 				}
 				else{
-					$botao = '<button type="button" class="btn btn-danger btn-sm" disabled="disabled">Inscrições Encerradas</button>';
-					//$botao = anchor('sist/realiza_inscricao/'.$oficina->id, 'Realizar Inscrição', array('class' => 'btn btn-primary btn-sm'));
+					//$botao = '<button type="button" class="btn btn-danger btn-sm" disabled="disabled">Inscrições Encerradas</button>';
+					$botao = anchor('sist/realiza_inscricao/'.$oficina->id, 'Realizar Inscrição', array('class' => 'btn btn-primary btn-sm'));
 				}
 			$stringdedata = "d/m/Y";
 			$oficina->data = date($stringdedata, strtotime($oficina->data));
@@ -255,6 +264,8 @@ class Sist extends CI_Controller {
 		foreach ($inscricoes as $inscricao){
 			$stringdedata = "%d/%m/%Y";
 			$inscricao->data = mdate($stringdedata, strtotime($inscricao->data));
+			$data['inscricoes']= "<tr class=\"gradeA\"><td>".$inscricao->nome."</td><td align=\"center\">".$inscricao->data."</td><td align=\"center\">".substr($inscricao->hora_inicio, 0,5)."</td><td align=\"center\">".substr($inscricao->hora_final, 0,5)."</td><td align='center'>".anchor('sist/deleta_inscricao_minhas_inscricoes/'.$inscricao->id_inscricao, 'Deletar Inscrição', array('class' => 'btn btn-danger btn-xs','onclick'=>"return excluir()"))."</td></tr>".$data['inscricoes'];
+			/*
 			if($inscricao->participou == 1){
 				$data['inscricoes']= "<tr><td>".$inscricao->nome."</td><td align=\"center\">".$inscricao->data."</td><td align=\"center\">".substr($inscricao->hora_inicio, 0,5)
 			."</td><td align=\"center\">".substr($inscricao->hora_final, 0,5)."</td><td>".anchor('sist/gera_certificados/'.$inscricao->id_atividade.'/'.$inscricao->id_participante, 'Gerar Certificado', array('class' => 'btn btn-success btn-xs'))."</td></tr>".$data['inscricoes'];
@@ -262,6 +273,7 @@ class Sist extends CI_Controller {
 			$data['inscricoes']= "<tr><td>".$inscricao->nome."</td><td align=\"center\">".$inscricao->data."</td><td align=\"center\">".substr($inscricao->hora_inicio, 0,5)
 			."</td><td align=\"center\">".substr($inscricao->hora_final, 0,5)."</td><td><button type='button' class='btn btn-danger btn-xs' disabled='disabled'>Participação não confirmada</button></td></tr>".$data['inscricoes'];
 			}
+			 */
 		}
 		$data['conteudo'] = 'sist/minhas_inscricoes';
 		$this->load->view('tplsist', $data);

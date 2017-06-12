@@ -18,7 +18,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 $config['base_url'] = 'http://localhost:8080/agricultura/sigev';
+/*
+function netMatch($cidr, $ip)
+{
+	list($net, $mask) = explode ('/', $cidr);
 
+	return (ip2long($ip) & ~((1 << (32 - $mask)) - 1)) == ip2long($net);
+}
+$ip = getenv("REMOTE_ADDR");
+$cidr = '10.10.0.0/24';
+$cidr2 = '10.10.1.0/24';
+$cidr3 = '10.10.2.0/24';
+if (netMatch($cidr, $ip) || netMatch($cidr2, $ip) || netMatch($cidr3, $ip) ){
+	$config['base_url'] = 'http://intra.caval.ifpi.edu.br/agricultura/sigev';
+}else{
+	$config['base_url'] = 'http://www.ifpicaval.com/agricultura/sigev';
+}
 /*
 |--------------------------------------------------------------------------
 | Index File
